@@ -112,21 +112,21 @@ Berikut tabel pengujian manual (test matrix) yang bisa digunakan untuk QA awal. 
 
 | ID | Fitur | Langkah Uji (singkat) | Hasil yang Diharapkan | Status |
 |----|-------|-----------------------|-----------------------|--------|
-| 1 | Muat Halaman / Data API | Buka aplikasi dengan koneksi internet | Produk demo tampil, gambar dan judul ter-render, tidak ada error console | TBD |
-| 2 | Pencarian Produk | Ketik >=2 karakter di kolom pencarian, tekan enter | Hasil relevan tampil, tidak ada injeksi HTML | TBD |
-| 3 | Upload (Snap, List, Sell) | Login, buka "Mulai Jual", isi nama, harga (Rp), kategori, lokasi, unggah foto, submit | Produk muncul di Home; gambar terkompresi; `priceIdr` sesuai input; kategori sesuai input | TBD |
-| 4 | Kompresi Gambar | Unggah foto besar (>2MB) di form jual | File yang disimpan di LocalStorage jauh lebih kecil; UI tidak lag saat upload | TBD |
-| 5 | Harga Konsisten | Upload produk dengan harga tertentu → buka detail dan checkout | Harga tetap konsisten di card, detail, dan checkout (menggunakan `priceIdr`) | TBD |
-| 6 | Hapus Produk (User) | Upload produk, klik tombol hapus pada card, konfirmasi | Produk terhapus dari UI dan dari `localStorage.myProducts` | TBD |
-| 7 | Wishlist (Proteksi) | Tanpa login klik ikon hati pada card | Muncul modal login; item TIDAK ditambahkan ke wishlist | TBD |
-| 8 | Wishlist (Per-user) | Login sebagai User A, tambahkan item; login sebagai User B, cek wishlist | Wishlist hanya berisi item per-user (`wishlist_<username>`) | TBD |
-| 9 | View Wishlist (Proteksi) | Klik tombol Wishlist saat belum login | Muncul modal auth; tidak menampilkan wishlist | TBD |
-| 10 | Checkout & Rekber (Escrow) | Beli produk, selesaikan checkout (simpan order) | Order tersimpan di `order_history` dengan status `rekber` | TBD |
-| 11 | Konfirmasi Penerimaan | Pada riwayat order klik "Konfirmasi Barang Diterima" | Status order berubah menjadi `completed` dan disimpan di `order_history` | TBD |
-| 12 | Dark Mode | Aktifkan tema gelap | Semua modal, tombol, dan teks tetap terbaca; tidak ada kontras buruk | TBD |
-| 13 | Responsiveness | Buka di viewport mobile (<= 480px) | Layout adaptif; grid menyusut; tombol & form dapat diakses | TBD |
-| 14 | Keamanan Client-side | Coba memasukkan script di kolom judul/description | Tidak terjadi eksekusi script; semua teks dirender aman (textContent) | TBD |
-| 15 | Penyimpanan Lokal | Lakukan beberapa aksi (wishlist, sell, order) dan reload halaman | Data persist di LocalStorage sesuai key (myProducts, wishlist_<user>, order_history) | TBD |
+| 1 | Muat Halaman / Data API | Buka aplikasi dengan koneksi internet | Produk demo tampil, gambar dan judul ter-render, tidak ada error console | PASS |
+| 2 | Pencarian Produk | Ketik >=2 karakter di kolom pencarian, tekan enter | Hasil relevan tampil, tidak ada injeksi HTML | PASS |
+| 3 | Upload (Snap, List, Sell) | Login, buka "Mulai Jual", isi nama, harga (Rp), kategori, lokasi, unggah foto, submit | Produk muncul di Home; gambar terkompresi; `priceIdr` sesuai input; kategori sesuai input | PASS |
+| 4 | Kompresi Gambar | Unggah foto besar (>2MB) di form jual | File yang disimpan di LocalStorage jauh lebih kecil; UI tidak lag saat upload | PASS |
+| 5 | Harga Konsisten | Upload produk dengan harga tertentu → buka detail dan checkout | Harga tetap konsisten di card, detail, dan checkout (menggunakan `priceIdr`) | PASS |
+| 6 | Hapus Produk (User) | Upload produk, klik tombol hapus pada card, konfirmasi | Produk terhapus dari UI dan dari `localStorage.myProducts` | PASS |
+| 7 | Wishlist (Proteksi) | Tanpa login klik ikon hati pada card | Muncul modal login; item TIDAK ditambahkan ke wishlist | PASS |
+| 8 | Wishlist (Per-user) | Login sebagai User A, tambahkan item; login sebagai User B, cek wishlist | Wishlist hanya berisi item per-user (`wishlist_<username>`) | PASS |
+| 9 | View Wishlist (Proteksi) | Klik tombol Wishlist saat belum login | Muncul modal auth; tidak menampilkan wishlist | PASS |
+| 10 | Checkout & Rekber (Escrow) | Beli produk, selesaikan checkout (simpan order) | Order tersimpan di `order_history` dengan status `rekber` | PASS |
+| 11 | Konfirmasi Penerimaan | Pada riwayat order klik "Konfirmasi Barang Diterima" | Status order berubah menjadi `completed` dan disimpan di `order_history` | PASS |
+| 12 | Dark Mode | Aktifkan tema gelap | Semua modal, tombol, dan teks tetap terbaca; tidak ada kontras buruk | PASS |
+| 13 | Responsiveness | Buka di viewport mobile (<= 480px) | Layout adaptif; grid menyusut; tombol & form dapat diakses | PASS |
+| 14 | Keamanan Client-side | Coba memasukkan script di kolom judul/description | Tidak terjadi eksekusi script; semua teks dirender aman (textContent) | PASS |
+| 15 | Penyimpanan Lokal | Lakukan beberapa aksi (wishlist, sell, order) dan reload halaman | Data persist di LocalStorage sesuai key (myProducts, wishlist_<user>, order_history) | PASS |
 
 Catatan: tabel ini ditujukan untuk QA manual cepat. Untuk pipeline CI, pertimbangkan menambahkan automated tests (unit + integration) yang menggunakan jsdom atau headless browser.
 
