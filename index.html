@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thrift Shop - Barang Bekas</title>
+  <!-- Content Security Policy: allow self and fakestoreapi.com for connect and images; disallow inline scripts -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://fakestoreapi.com; img-src 'self' https://fakestoreapi.com data:; style-src 'self' 'unsafe-inline'; script-src 'self';">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <a class="logo" href="/">Thrift Shop</a>
+        <p class="tag">Barang Bekas — Hemat & Berkelas</p>
+      </div>
+
+      <nav class="nav">
+        <form id="searchForm" class="search-form" role="search" aria-label="Cari produk">
+          <label for="q" class="visually-hidden">Cari produk</label>
+          <input id="q" name="q" type="text" placeholder="Cari, mis. jaket, sepatu" autocomplete="off">
+          <button type="submit" aria-label="Cari">Cari</button>
+    </form>
+        <div id="nav-auth-container" class="auth-actions">
+          <button id="btn-login" class="btn-outline">Login</button>
+          <button id="btn-register" class="btn-outline">Daftar</button>
+          <button id="btn-wishlist" class="btn-outline" title="Wishlist">Wishlist</button>
+          <button id="btn-sell" class="btn-outline" title="Jual Barang">Mulai Jual</button>
+          <div id="user-greet" style="display:none;color:#fff;margin-left:12px"></div>
+          <button id="btn-logout" class="btn-outline" style="display:none;margin-left:8px;">Logout</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <h1>Belanja Barang Bekas Berkualitas</h1>
+          <p class="lead">Pilihan preloved yang dirawat dengan baik — hemat dengan kualitas seperti baru</p>
+        </div>
+        <div class="hero-cta">
+          <button id="nav-history-hero" class="btn-ghost">Riwayat Pemesanan</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="container products-section">
+      <div class="controls-row">
+        <div class="info">Menampilkan <span id="count">0</span> produk</div>
+        <div>
+          <label for="sort" class="visually-hidden">Urutkan</label>
+          <select id="sort">
+            <option value="default">Terbaru</option>
+            <option value="price-asc">Harga: Rendah ke Tinggi</option>
+            <option value="price-desc">Harga: Tinggi ke Rendah</option>
+          </select>
+        </div>
+      </div>
+
+      <ul id="products" class="products" aria-live="polite"></ul>
+      <div id="status" class="status" role="status" aria-live="assertive"></div>
+    </section>
+
+    <!-- Categories grouped view -->
+    <section id="home-view" class="page-view container categories-section">
+      <div id="categories-container"></div>
+    </section>
+
+    <!-- Detail view (hidden by default). SPA will toggle visibility -->
+    <div id="detail-view" class="page-view" style="display: none;"></div>
+  <!-- Checkout view (hidden by default) -->
+  <div id="checkout-view" class="page-view" style="display: none;"></div>
+
+    <!-- Success Modal (hidden by default) -->
+    <div id="success-modal" style="display: none;">
+      <div class="modal-backdrop" aria-hidden="true"></div>
+      <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal-icon">✅</div>
+        <h3 id="modal-title">Pembelian Berhasil!</h3>
+        <p class="modal-message">Terima kasih <strong id="modal-buyer-name"></strong>. Pesanan <strong id="modal-product-name"></strong> telah diterima dan sedang diproses.</p>
+        <div style="text-align:right;margin-top:12px;">
+          <button id="modal-close" class="btn-primary">Kembali ke Beranda</button>
+        </div>
+      </div>
+    </div>
+    <!-- Confirm Delete Modal -->
+    <div id="confirm-modal" style="display:none;">
+      <div class="modal-backdrop" aria-hidden="true"></div>
+      <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+        <h3 id="confirm-title">Hapus Riwayat?</h3>
+        <p class="modal-message">Apakah kamu yakin ingin menghapus semua data riwayat pemesanan? Tindakan ini tidak dapat dibatalkan.</p>
+        <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px;">
+          <button id="confirm-cancel" class="btn-secondary">Batal</button>
+          <button id="confirm-delete" class="btn-danger">Ya, Hapus</button>
+        </div>
+      </div>
+    </div>
+    <!-- Chat Modal (simulated in-app chat, no phone numbers) -->
+    <div id="chat-modal" style="display:none;">
+      <div class="modal-backdrop" aria-hidden="true"></div>
+      <div class="modal-box chat-box" role="dialog" aria-modal="true" aria-labelledby="chat-title">
+        <div class="chat-header">
+          <h3 id="chat-title">Chat Penjual</h3>
+          <button id="chat-close" class="btn-secondary" aria-label="Tutup chat">✕</button>
+        </div>
+        <div id="chat-messages" class="chat-messages" aria-live="polite"></div>
+        <div class="chat-input-row">
+          <input id="chat-input" type="text" placeholder="Ketik pesan..." autocomplete="off">
+          <button id="chat-send" class="btn-primary">Kirim</button>
+        </div>
+      </div>
+    </div>
+  <!-- History view (hidden by default) -->
+  <div id="history-view" class="page-view" style="display: none;"></div>
+
+  <!-- Wishlist view (hidden by default) -->
+  <section id="wishlist-view" class="page-view container" style="display:none;">
+      <div class="wishlist-header">
+        <h3 id="wishlist-title">Barang Favorit Kamu</h3>
+        <div>
+          <button id="wishlist-back-home" class="btn-secondary">Kembali ke Beranda</button>
+        </div>
+      </div>
+      <div id="wishlist-container"></div>
+    </section>
+
+  <!-- Authentication full-page views -->
+  <section id="login-view" class="page-view app-view" style="display:none;">
+      <div class="auth-page">
+        <h3>Masuk ke Thrift Shop</h3>
+        <form id="login-form">
+          <label for="login-identifier">Email atau Username</label>
+          <input id="login-identifier" name="identifier" type="text" required>
+          <label for="login-password">Kata Sandi</label>
+          <input id="login-password" name="password" type="password" required>
+          <div class="auth-actions-row">
+            <button type="submit" class="btn-primary">Masuk</button>
+            <button type="button" id="login-cancel" class="btn-secondary">Kembali ke Beranda</button>
+          </div>
+          <div style="margin-top:10px;font-size:0.92rem">
+            <a href="#" id="login-go-register" class="muted">Belum punya akun? Daftar di sini</a>
+          </div>
+          <div style="margin-top:10px;font-size:0.95rem;color:var(--muted);">
+            Login sekarang untuk mulai menjual barang preloved kamu di Malang!
+          </div>
+        </form>
+      </div>
+    </section>
+
+  <section id="register-view" class="page-view app-view" style="display:none;">
+      <div class="auth-page">
+        <h3>Daftar Akun</h3>
+        <form id="register-form">
+          <label for="reg-name">Nama Lengkap</label>
+          <input id="reg-name" name="fullname" type="text" required>
+          <label for="reg-email">Email</label>
+          <input id="reg-email" name="email" type="email" required>
+          <label for="reg-password">Kata Sandi</label>
+          <input id="reg-password" name="password" type="password" required>
+          <label for="reg-password2">Konfirmasi Kata Sandi</label>
+          <input id="reg-password2" name="password2" type="password" required>
+          <div class="auth-actions-row">
+            <button type="submit" class="btn-primary">Daftar Sekarang</button>
+            <button type="button" id="register-cancel" class="btn-secondary">Kembali ke Beranda</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Sell view (Snap, List, Sell) -->
+    <section id="sell-view" class="page-view container" style="display:none;">
+      <div class="sell-card" style="max-width:720px;margin:18px auto;padding:18px;background:var(--surface);border-radius:12px;border:1px solid var(--card-border);">
+        <h3>Jual Barang</h3>
+        <form id="sell-form">
+          <label for="sell-name">Nama Barang</label>
+          <input id="sell-name" name="name" type="text" required>
+
+          <label for="sell-price">Harga (Rp)</label>
+          <input id="sell-price" name="price" type="number" min="200000" max="2000000" required>
+          <div class="muted" style="font-size:0.9rem;margin-bottom:8px">Harga harus antara Rp 200.000 dan Rp 2.000.000</div>
+
+          <label for="sell-category">Kategori</label>
+          <select id="sell-category" name="category" required>
+            <option value="men's clothing">Men's Clothing</option>
+            <option value="women's clothing">Women's Clothing</option>
+            <option value="jewelery">Jewelery</option>
+            <option value="electronics">Electronics</option>
+          </select>
+
+          <label for="sell-location">Lokasi</label>
+          <input id="sell-location" name="location" type="text" value="Malang, Jatim">
+
+          <label for="sell-photo">Upload Foto</label>
+          <input id="sell-photo" name="photo" type="file" accept="image/*" required>
+
+          <div id="sell-spinner" style="display:none;margin:8px 0;color:var(--muted)">Sedang Mengompres Gambar...</div>
+
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
+            <button type="button" id="sell-cancel" class="btn-secondary">Batal</button>
+            <button type="submit" id="sell-submit" class="btn-primary">Jual Sekarang</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>© 2026 Thrift Shop</div>
+      <div class="muted"></div>
+    </div>
+  </footer>
+
+  <!-- Delete confirmation modal -->
+  <div id="delete-modal" aria-hidden="true" data-modal="delete">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box delete-modal-box" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+      <div class="modal-content">
+        <h3 id="delete-modal-title">Hapus Barang?</h3>
+        <p id="delete-modal-message">Apakah Anda yakin ingin menghapus barang ini? Tindakan ini tidak dapat dibatalkan.</p>
+        <div class="modal-actions">
+          <button id="delete-confirm-btn" class="btn-danger">Ya, Hapus</button>
+          <button id="delete-cancel-btn" class="btn-secondary">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth-required modal (shown when trying to access Sell while logged out) -->
+  <div id="auth-modal" aria-hidden="true" data-modal="auth">
+    <div class="modal-backdrop"></div>
+    <div class="modal-box auth-modal-box" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+      <div class="modal-content">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <div style="font-size:28px">🔒</div>
+          <h3 id="auth-modal-title">Akses Dibatasi</h3>
+        </div>
+  <p id="auth-modal-message">Kamu harus login terlebih dahulu untuk mulai berjualan!</p>
+        <div class="modal-actions">
+          <button id="auth-login-btn" class="btn-primary">Login Sekarang</button>
+          <button id="auth-cancel-btn" class="btn-secondary">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
