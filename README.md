@@ -1,6 +1,6 @@
 # Thrift Shop - Marketplace Preloved Mahasiswa (UMM)
 
-Sebuah Single Page Application (SPA) yang dirancang untuk mendukung kebutuhan mahasiswa di Malang (khususnya area sekitar UMM/Wagir) dalam bertransaksi barang preloved secara aman, ringan, dan ramah kampus. Aplikasi ini dibuat untuk kebutuhan demo akademik dan prototipe — fokus pada pengalaman pengguna yang simpel, performa ringan, dan fitur-fitur yang relevan untuk mahasiswa.
+Sebuah Single Page Application (SPA) yang dirancang untuk mendukung kebutuhan mahasiswa di Malang (khususnya area sekitar UMM) dalam bertransaksi barang preloved secara aman, ringan, dan ramah kampus. Aplikasi ini dibuat untuk kebutuhan demo akademik dan prototipe — fokus pada pengalaman pengguna yang simpel, performa ringan, dan fitur-fitur yang relevan untuk mahasiswa.
 
 ## Fitur Utama
 
