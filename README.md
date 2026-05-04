@@ -130,6 +130,3 @@ Berikut tabel pengujian manual (test matrix) yang bisa digunakan untuk QA awal. 
 
 Catatan: tabel ini ditujukan untuk QA manual cepat. Untuk pipeline CI, pertimbangkan menambahkan automated tests (unit + integration) yang menggunakan jsdom atau headless browser.
 
----
-
-Jika Anda ingin, saya bisa mengubah kolom 'Status' menjadi checklist per test atau membuat template langkah uji rinci untuk setiap item (test case dengan langkah 1..n). Beri tahu format mana yang Anda inginkan.
